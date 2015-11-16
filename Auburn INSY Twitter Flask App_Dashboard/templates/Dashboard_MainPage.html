@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Auburn INSY Twitter Web App</title>
+		<meta charset="utf-8"/>
+		<link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel='stylesheet' />	
+	</head>
+	<body class="body-style">
+		<div class="navbar-inverse navbar-default navbar-top">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Auburn INSY Twitter App</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="/">Dashboard</a></li>
+					<li><a href="/TemporalAnalysis_FlowingData">Temporal Analysis on Flowing Data</a></li>
+					<li><a href="/TemporalAnalysis_PersistentData">Temporal Analysis on Persistent Data</a></li>
+				</ul>
+			</div>
+		</div>
+			
+			<div class = "jumbo">
+	
+		<h2>Auburn INSY Twitter Web App Visualization Dashboard</h2>
+		
+		<br/>
+
+		<p> Please click on the various tabs above to see the various Visual Analysis. Each page takes about 25 seconds to start. </p>
+		
+
+		<p align = "justify"> The javascript libraries used for the visualizations are
+		 <a href="http://dc-js.github.io/dc.js/"> dc.js </a>, with native cross filter support for exploration of
+		 multidimensional datasets, <a href="http://d3js.org/"> d3.js </a>, a highly popular javascript library for data visualization 
+		 and <a href="http://square.github.io/crossfilter/"> crossfilter.js </a>, for fast multidimensional filtering for coordinated
+		 views. The work force of this application is Python <a href="http://flask.pocoo.org/"> Flask, </a> a microframework for Python based on Werkzeug and Jinja 2.
+		 For sentiment analysis we have used the  <a href="https://github.com/cjhutto/vaderSentiment"> VADER-Sentiment Analysis, </a> python library. This 
+		 python library is based on the paper-
+		 Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text. 
+		 Eighth International Conference on Weblogs and Social Media (ICWSM-14). Ann Arbor, MI, June 2014. 
+		
+		 
+    </p>
+	
+	
+	</div>
+	
+<style>
+.body-style {
+	width:90%;
+	margin:0 auto;
+}
+#StatVizHeading1 {
+    
+    
+    
+    padding:5px;
+	font:  15px sans-serif;
+}
+
+#StatVizline1{
+    
+    height: 20px;
+    
+    position: relative;
+}
+
+#StatVizline1:after {
+    border-top: 2px solid steelblue;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+}
+
+
+#Tracktablecontainer
+{
+    width: 2000px;
+    float: left;
+    height: 100px;
+	  margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+		font:  12px sans-serif;
+    
+}
+
+Tracktable{
+   border: 1px solid black;
+}
+Tracktable{
+width: 100%
+}
+#Viz1 svg{
+    width: 1800px;
+    float: left;
+    height: 300px;
+	
+      background-color: white;
+	  margin-top: 50px;
+    margin-bottom: 10px;
+    margin-right: 50px;
+    font:  12px sans-serif;
+}
+	 
+	 
+#Viz2 svg{ width: 500px;
+    float: left;
+    height: 250px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz3 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz4 svg{ width: 500px;
+    float: right;
+    height: 250px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+
+#Viz5 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz6 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz7 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }
+	 
+#Viz8 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+
+#Viz9 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz10 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz11 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz12 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz13 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+
+#container1{
+width: auto;
+}
+	 	 
+
+</style>
+
+<div id="StatVizHeading1">
+
+<h2>Based on the paper: A Visual Analytics Perspective on the Analysis of large time dependent Datasets</h2>
+
+ <p>Yedurag Babu, Zahra S. Maman, Jithin George and Fadel M. Megahed</p>
+ <p>Department of Industrial and Systems Engineering, Auburn University, Auburn AL 36849</p>
+
+
+</div>
+
+<div id="StatVizline1">
+</div>
+
+
+<div class="container" id = 'container1'>
+
+
+	
+<p align = "justify">
+
+Graphical methods are often used to visually and qualitatively describe 
+data, as well as depict the relationship between different variables. 
+The use of graphs has been promoted as indispensable component of exploratory data analysis (EDA),
+ which allows statisticians and practitioners to identify outliers, trends, and patterns that merit further study. 
+ In addition, graphical methods such as histograms, quantile-quantile plots, and residual plots are often used for assumption checking, 
+ an important component of parametric data analysis protocols. It should be noted that these commonly used approaches were proposed prior to the advent of microcomputers as 
+ efficient methods to record and visualize data for single (or few) variable(s) processes. As the volume, variety, and velocity of data continues to evolve (like 
+ that social media documents) making all that huge amount of data comprehensible in a manner that is easy to understand and read, would be a most important part of visual analytic. 
+ To apply visual analytic in this large data set there are opportunities to supplement and improve traditional methods for understanding and visualizing process variation. 
+ In this paper, we propose novel intractive graphical tools that are more suitable for large datasets like twitter as one of social media platforms. We demonstrate how 
+ these new tools can be used to better describe the real time nature of the social media datasets. Finally, we create some visualization toolkit to allow practitioners 
+ to implement some of these visualization tools without
+ the need for training, extensive statistical background, and/or specialized statistical software.
+
+</p>
+</div>
+</body>
+		
+</html>

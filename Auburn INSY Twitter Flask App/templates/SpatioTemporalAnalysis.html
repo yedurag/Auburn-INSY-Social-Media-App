@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+		
+			<title> Auburn INSY Twitter Web App</title>
+			
+			<link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel='stylesheet' />
+		</head>
+		
+		<body>
+		
+			<header>
+				<div class="navbar navbar-inverse">
+				
+					<div class="navbar-inner">
+					
+						<a class="brand" href="/">Auburn INSY Twitter App</a>
+						
+						<ul class="nav">
+						
+						<li class="active"><a href="/">Home</a></li>
+						<li><a href="/SpatioTemporalAnalysis">SpatioTemporal Analysis</a></li>
+						<li><a href="/MainPage">MainPage</a></li>
+						
+						
+						</ul>
+						
+					</div>
+					
+				</div>
+				
+				</header>
+				
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-label/v0.2.1/leaflet.label.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-label/v0.2.1/leaflet.label.css' rel='stylesheet' />
+<link href="{{ url_for('static', filename='dc.css')}}" rel='stylesheet' />
+<script src="{{ url_for('static', filename='crossfilter.js')}}"></script>
+<script src="{{ url_for('static', filename='d3.min.js')}}"></script>
+<script src="{{ url_for('static', filename='dc.js')}}"></script>
+<script src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
+<script src="{{ url_for('static', filename='moment.js')}}"></script>
+<link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel='stylesheet' />				
+<style>
+#StatVizHeading1 {
+    
+    
+    
+    padding:5px;
+	font:  15px sans-serif;
+}
+
+#StatVizline1{
+    
+    height: 20px;
+    
+    position: relative;
+}
+
+#StatVizline1:after {
+    border-top: 2px solid steelblue;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+}
+
+
+#Tracktablecontainer
+{
+    width: 2000px;
+    float: left;
+    height: 100px;
+	  margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+		font:  12px sans-serif;
+    
+}
+
+Tracktable{
+   border: 1px solid black;
+}
+Tracktable{
+width: 100%
+}
+#Viz1 svg{
+    width: 1800px;
+    float: left;
+    height: 300px;
+	
+      background-color: white;
+	  margin-top: 50px;
+    margin-bottom: 10px;
+    margin-right: 50px;
+    font:  12px sans-serif;
+}
+	 
+	 
+#Viz2 svg{ width: 500px;
+    float: left;
+    height: 250px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz3 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz4 svg{ width: 500px;
+    float: right;
+    height: 250px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+
+#Viz5 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz6 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+#Viz7 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }
+	 
+#Viz8 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+
+#Viz9 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz10 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz11 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz12 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+#Viz13 svg{ width: 1800px;
+    float: right;
+    height: 300px;
+	
+	 
+    margin-right: 50px;
+		font:  12px sans-serif;
+     }	 
+	 
+
+#container1{
+width: auto;
+}
+	 	 
+
+</style>
+						
+
+<div id="StatVizHeading1">
+<h1>Spatio Temporal Analysis of Twitter Dataset</h1>
+<h2>Based on the paper: A Visual Analytics Perspective on the Analysis of Longitudinal Datasets</h2>
+
+ <p>Zahra S. Maman, Fadel M. Megahed, Jithin George, Yedurag Babu</p>
+ <p>Department of Industrial and Systems Engineering, Auburn University, Auburn AL 36849</p>
+
+
+</div>
+
+<div id="StatVizline1">
+</div>
+
+
+<div class="container" id = 'container1'>
+
+<h3><b><font size="4">Spatio Temporal Analysis of Twitter Dataset</font></b></h3>
+
+<p align = "justify"> The javascript libraries used for the visualizations are
+		 <a href="http://dc-js.github.io/dc.js/"> dc.js </a>, with native cross filter support for exploration of
+		 multidimensional datasets, <a href="http://d3js.org/"> d3.js </a>, a highly popular javascript library for data visualization 
+		 and <a href="http://square.github.io/crossfilter/"> crossfilter.js </a>, for fast multidimensional filtering for coordinated
+		 views. The work force of this application is Python <a href="http://flask.pocoo.org/"> Flask, </a> a microframework for Python based on Werkzeug and Jinja 2.
+		
+		 
+    </p>
+	
+<p align = "justify">
+
+Graphical methods are often used to visually and qualitatively describe data, as well as depict the relationship between different variables.  
+The use of graphs has been promoted as indispensable component of exploratory data analysis (EDA), which allows statisticians and practitioners to identify outliers, 
+trends, and patterns that merit further study.  In addition, graphical methods such as histograms, quantile-quantile plots, and residual plots are often used for assumption checking, 
+an important component of parametric data analysis protocols.  It should be noted that these commonly used approaches were proposed prior to the advent of microcomputers as efficient methods
+ to record and visualize data for single (or few) variable(s) processes. As the volume, variety, and velocity of data continues to evolve, there are opportunities to supplement and improve these methods 
+ for understanding and visualizing process variation.  In this paper, we propose novel graphical tools that are more suitable for larger datasets.  
+ We demonstrate how these new tools can be used to better describe the data, using real datasets.  
+ Finally, we create a longitudinal visualization toolkit to allow practitioners to implement some of these visualization tools without the need for training, 
+ extensive statistical background, and/or specialized statistical software.
+
+</p>
+
+
+
+
+<div class="clearfix"></div>
+<div class='container' style='font: 12px sans-serif' id='Tracktablecontainer' align = "left">
+  <div class='row'>
+    <div class='span2'>
+      <table class='table table-hover' id='Tracktable'>
+        <thead>
+          <tr class='header'>
+            <th>Track 1</th>
+
+			<th>Track 2</th>
+
+			<th>Track 3</th>
+
+			<th>Track 4</th>
+
+			<th>Track 5</th>
+
+			<th>Track 6</th>
+
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="Viz2" >
+        <strong>Tracks- Tweet Counts</strong> 
+		<p align = "justify">The donut chart here gives tweet counts by tracks for persistent data for as long as 2 minutes. Apart from visualizing the distribution of tweet count per track, this donut chart is meant for filtering the data and for coordinated views.</p>
+		
+        <a class="reset" href="javascript:Viz2.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+	
+<div id="Viz4" >
+        <strong>Sentiment bins</strong> 
+		<p align = "justify">The donut chart here gives counts by sentiment bins for persistent data for as long as 2 minutes. Apart from visualizing the distribution of tweet count per sentiment bin, this donut chart is meant for filtering the data and for coordinated views.</p>
+		
+        <a class="reset" href="javascript:Viz4.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+<div id="Viz1" >
+        <strong>Multi Time Series- Tweet Counts</strong> 
+		<p align = "justify">The Multi time series chart below explores the variation in tweet counts for persistent data for upto 2 minutes. (x Axis: Time y Axis: Tweet count)</p>
+		
+        <a class="reset" href="javascript:Viz1.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+	
+
+	
+
+	
+<div id="Viz3" >
+        <strong>Multi Time Series- Average sentiment</strong> 
+		<p align = "justify">The Multi time series chart below explores the variation in average sentiment for persistent data for upto 2 minutes. (x Axis: Time y Axis: Sentiment(-1 to 1))</p>
+		
+        <a class="reset" href="javascript:Viz3.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+ 
+ 
+ <div id="Viz5" >
+        <strong>Time Series Bubble Chart- Popular hashtags</strong> 
+		<p align = "justify">This time series bubble chart shows the distribution of hashtags over time for persistent data for upto 2 minutes.(x Axis: Time  y Axis: Tweet count  Size of bubble:Number of occurrence of hashtag  ) </p>
+		
+        <a class="reset" href="javascript:Viz5.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+
+
+ <div id="Viz6" >
+        <strong>Multi Time Series- Tweet Counts (By Seconds)</strong> 
+		<p align = "justify">The Multi time series chart below explores the variation in tweet counts for more persistent data for upto 2 hours. (x Axis: Time y Axis: Tweet count) </p>
+		
+        <a class="reset" href="javascript:Viz5.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+	
+	
+ <div id="Viz7" >
+        <strong>Multi Time Series- Tweet Counts (By Minutes)</strong> 
+		<p align = "justify">The Multi time series chart below explores the variation in tweet counts for more persistent data for upto 1 day. (x Axis: Time y Axis: Tweet count) </p>
+		
+        <a class="reset" href="javascript:Viz7.filterAll();dc.redrawAll();" style="display: none;"></a>
+      
+        
+    </div>
+</div>
+
+
+<script>
+
+(function() {
+
+var TrackTable = dc.dataTable("#Tracktable");
+function tabularmagic() {
+
+d3.json("http://127.0.0.1:5001/datastream11", function (data) {
+
+  // format our data
+  //var dtgFormat = d3.time.format("%H-%M-%S");
+ 
+
+  data.forEach(function(d) { 
+
+    d.Track_name1   = d.Track_name1;
+
+    d.Track_name2   = d.Track_name2;
+
+    d.Track_name3   = d.Track_name3;
+
+    d.Track_name4   = d.Track_name4;
+
+    d.Track_name5   = d.Track_name5;
+
+    d.Track_name6   = d.Track_name6;
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var tracks = crossfilter(data);
+
+  // Create dataTable dimension
+  var trackDimension = tracks.dimension(function (d) {
+    return d.Track_name1;
+  });
+  
+  
+  
+   TrackTable.width(400).height(100)
+    .dimension(trackDimension)
+    .group(function(d) { return " "
+     })
+    .size(3)
+    .columns([
+     
+      function(d) { return  d.Track_name1; },
+
+	  function(d) { return  d.Track_name2; },
+
+	  function(d) { return  d.Track_name3; },
+
+	  function(d) { return  d.Track_name4; },
+
+	  function(d) { return  d.Track_name5; },
+
+	  function(d) { return  d.Track_name6; }
+      
+     ])
+    .sortBy(function(d){ return d.Track_name1; })
+    .order(d3.ascending);
+	
+	
+	
+dc.renderAll();	
+  
+});
+
+}
+
+var interval = setInterval(function(){tabularmagic()}, 25000);
+})();  
+
+
+(function() {
+var Viz1 = dc.compositeChart("#Viz1");
+var Viz2 = dc.pieChart("#Viz2");
+var Viz3 = dc.compositeChart("#Viz3");
+var Viz4 = dc.pieChart("#Viz4");
+var Viz5 = dc.bubbleChart("#Viz5");
+
+function secondarymagic() {
+
+d3.json("http://127.0.0.1:5001/datastream1", function (data) {
+
+var secformat = d3.time.format("%Y-%m-%d %H:%M:%S");
+var minformat = d3.time.format("%Y-%m-%d %H:%M");
+var hourformat = d3.time.format("%Y-%m-%d %H");
+var numberFormat = d3.format(".0f");
+var numberFormat1 = d3.format(".2n");	
+
+  data.forEach(function(d) {
+	d.timestampsec= secformat.parse(d["timestamp"]);
+	d.user_name = d["user_name"];
+    d.tweet   = d["tweet"];
+	d.sentiment = parseFloat(d["sentiment"]);
+	d.sentibin = d["sentibin"];
+	d.track_name = d["track_name"];
+	d.track = d["track"];
+	d.tophashtag = d["tophashtag"];
+	d.tophashtagcount = d["tophashtagcount"];
+	d.track1_count = parseInt(d["track1_count"]);
+	d.track2_count = parseInt(d["track2_count"]);
+	d.track3_count = parseInt(d["track3_count"]); 
+	d.track4_count = parseInt(d["track4_count"]); 
+	d.track5_count = parseInt(d["track5_count"]); 
+	d.track6_count = parseInt(d["track6_count"]); 
+		
+	d.track1_sentiment = parseFloat(d["track1_sentiment"]); 
+	d.track2_sentiment = parseFloat(d["track2_sentiment"]);
+	d.track3_sentiment = parseFloat(d["track3_sentiment"]); 
+	d.track4_sentiment = parseFloat(d["track4_sentiment"]); 
+	d.track5_sentiment = parseFloat(d["track5_sentiment"]); 
+	d.track6_sentiment = parseFloat(d["track6_sentiment"]); 
+		
+	
+    
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var tweets = crossfilter(data);
+
+  // Create dataTable dimension
+  var timepointsec = tweets.dimension(function (d) {
+            return d.timestampsec ;
+        });
+		
+	var trackdim = tweets.dimension(function (d) {
+            return d.track ;
+        });
+		
+		
+	var sentidim = tweets.dimension(function (d) {
+            return d.sentibin ;
+        });
+		
+	var hashtagdim = tweets.dimension(function (d) {
+            return d.tophashtag ;
+        });
+		
+		
+		
+var minussec = timepointsec.bottom(1)[0].timestampsec;
+var maxussec = timepointsec.top(1)[0].timestampsec;
+
+function reduceAdd(p,v) {
+			++p.count
+			return p;
+			}
+		function reduceRemove(p,v) {
+			--p.count
+			return p;
+			}
+		function reduceInitial() {
+			return {count:0};
+			}	
+
+var trackstats = trackdim.group().reduce(reduceAdd, reduceRemove, reduceInitial);
+var sentistats = sentidim.group().reduce(reduceAdd, reduceRemove, reduceInitial);
+var hashtagstats = hashtagdim.group().reduce(
+                function (p, v) {
+					++p.count
+                    
+					p.tophashtagcount = p.tophashtagcount + parseInt(v.tophashtagcount);
+                   
+					p.timestampseclist.push(v.timestampsec);
+				
+					
+                    return p;
+                }, 
+                function (p, v) {
+					--p.count
+                    p.tophashtagcount = p.tophashtagcount - parseInt(v.tophashtagcount);
+                   
+					p.timestampseclist.pop(v.timestampsec);
+                    return p; 
+                },
+                function () {
+                    return {count: 0, tophashtagcount: 0, timestampseclist:[]}
+                }
+        )
+	
+var statsbytimepointsec = timepointsec.group().reduce(
+                function (p, v) {
+					++p.count
+					p.track1_count = p.track1_count + parseInt(v.track1_count);
+					p.track2_count = p.track2_count + parseInt(v.track2_count);
+					p.track3_count = p.track3_count + parseInt(v.track3_count);
+					p.track4_count = p.track4_count + parseInt(v.track4_count);
+					p.track5_count = p.track5_count + parseInt(v.track5_count);
+					p.track6_count = p.track6_count + parseInt(v.track6_count);
+					
+					
+					
+					if (v.track != "Track1") {
+						p.track1_avgsentiment = 0;
+						p.track1_sentiment = 0;
+						} else { 
+						p.track1_sentiment = p.track1_sentiment + parseFloat(v.sentiment);
+						p.track1_avgsentiment = parseFloat(p.track1_sentiment/p.count);
+						}
+					
+					if (v.track != "Track2") {
+						p.track2_avgsentiment = 0;
+						p.track2_sentiment = 0;
+						} else {
+						p.track2_sentiment = p.track2_sentiment + parseFloat(v.sentiment);
+						p.track2_avgsentiment = parseFloat(p.track2_sentiment/p.count);
+						}
+					
+					if (v.track != "Track3") {
+						p.track3_avgsentiment = 0;
+						p.track3_sentiment = 0;
+						} else {
+						p.track3_sentiment = p.track3_sentiment + parseFloat(v.sentiment);
+						p.track3_avgsentiment = parseFloat(p.track3_sentiment/p.count);
+						}
+					
+					
+					if (v.track != "Track4") {
+						p.track4_avgsentiment = 0;
+						p.track4_sentiment = 0;
+						} else {
+						p.track4_sentiment = p.track4_sentiment + parseFloat(v.sentiment);
+						p.track4_avgsentiment = parseFloat(p.track4_sentiment/p.count);
+						}
+					
+					if (v.track != "Track5") {
+						p.track5_avgsentiment = 0;
+						p.track5_sentiment = 0;
+						} else {
+						p.track5_sentiment = p.track5_sentiment + parseFloat(v.sentiment);
+						p.track5_avgsentiment = parseFloat(p.track5_sentiment/p.count);
+						}
+					
+					if (v.track != "Track6") {
+						p.track6_avgsentiment = 0;
+						p.track6_sentiment = 0;
+						} else {
+						p.track6_sentiment = p.track6_sentiment + parseFloat(v.sentiment);
+						p.track6_avgsentiment = parseFloat(p.track6_sentiment/p.count);
+						}
+				
+                    return p;
+                },
+                function (p, v) {
+					--p.count
+					p.track1_count = p.track1_count - parseInt(v.track1_count);
+					p.track2_count = p.track2_count - parseInt(v.track2_count);
+					p.track3_count = p.track3_count - parseInt(v.track3_count);
+					p.track4_count = p.track4_count - parseInt(v.track4_count);
+					p.track5_count = p.track5_count - parseInt(v.track5_count);
+					p.track6_count = p.track6_count - parseInt(v.track6_count);
+					
+					
+					if (v.track != "Track1") {
+						p.track1_avgsentiment = 0;
+						p.track1_sentiment = 0;
+						} else { 
+						p.track1_sentiment = p.track1_sentiment - parseFloat(v.sentiment);
+						p.track1_avgsentiment = parseFloat(p.track1_sentiment/p.count);
+						}
+					
+					if (v.track != "Track2") {
+						p.track2_avgsentiment = 0;
+						p.track2_sentiment = 0;
+						} else {
+						p.track2_sentiment = p.track2_sentiment - parseFloat(v.sentiment);
+						p.track2_avgsentiment = parseFloat(p.track2_sentiment/p.count);
+						}
+					
+					if (v.track != "Track3") {
+						p.track3_avgsentiment = 0;
+						p.track3_sentiment = 0;
+						} else {
+						p.track3_sentiment = p.track3_sentiment - parseFloat(v.sentiment);
+						p.track3_avgsentiment = parseFloat(p.track3_sentiment/p.count);
+						}
+					
+					
+					if (v.track != "Track4") {
+						p.track4_avgsentiment = 0;
+						p.track4_sentiment = 0;
+						} else {
+						p.track4_sentiment = p.track4_sentiment - parseFloat(v.sentiment);
+						p.track4_avgsentiment = parseFloat(p.track4_sentiment/p.count);
+						}
+					
+					if (v.track != "Track5") {
+						p.track5_avgsentiment = 0;
+						p.track5_sentiment = 0;
+						} else {
+						p.track5_sentiment = p.track5_sentiment - parseFloat(v.sentiment);
+						p.track5_avgsentiment = parseFloat(p.track5_sentiment/p.count);
+						}
+					
+					if (v.track != "Track6") {
+						p.track6_avgsentiment = 0;
+						p.track6_sentiment = 0;
+						} else {
+						p.track6_sentiment = p.track6_sentiment - parseFloat(v.sentiment);
+						p.track6_avgsentiment = parseFloat(p.track6_sentiment/p.count);
+						}
+				
+					
+					
+                    return p; 
+                },
+                function () {
+                    return {count: 0, track1_count: 0, track2_count: 0, track3_count: 0,track4_count: 0, track5_count: 0, track6_count: 0, track1_sentiment: 0.0000, track2_sentiment:0.0000, track3_sentiment: 0.0000, track4_sentiment: 0.0000 , track5_sentiment: 0.0000, track6_sentiment: 0.0000, track1_avgsentiment:0.0000, track2_avgsentiment:0.0000, track3_avgsentiment: 0.0000, track4_avgsentiment: 0.0000, track5_avgsentiment: 0.0000,track6_avgsentiment: 0.0000 } 
+                }
+        )
+var colorScaletrack = d3.scale.ordinal().domain(["Track1", "Track2","Track3","Track4","Track5","Track6"])
+                                   .range(["#1b9e77", "#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02"]);		
+
+var colorScalesenti = d3.scale.ordinal().domain(["very positive", "positive","neutral","negative","very negative"])
+                                   .range(["#1a9641", "#a6d96a","#0571b0","#fdae61","#d7191c"]);			
+		
+		
+Viz2
+    .width(200)
+    .height(200)
+    .innerRadius(50)
+    .dimension(trackdim)
+	.colors(function(d){ return colorScaletrack(d); })
+    .group(trackstats)
+	 .valueAccessor(function(p) { return p.value.count; })
+    .legend(dc.legend().x(350).y(100).gap(5));
+	
+	
+Viz4
+    .width(200)
+    .height(200)
+    .innerRadius(50)
+    .dimension(sentidim)
+	.colors(function(d){ return colorScalesenti(d); })
+    .group(sentistats)
+	 .valueAccessor(function(p) { return p.value.count; })
+    .legend(dc.legend().x(250).y(100).gap(5));
+		
+Viz1
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minussec,maxussec]))
+		
+		.dimension(timepointsec)
+		.group(statsbytimepointsec)
+	
+		  
+		
+		.elasticY(true)
+		.xAxisPadding(10)
+		
+		.xAxisLabel("Time")
+		.yAxisLabel("Tweet count")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz1)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track1_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_count;
+                }),
+				
+				dc.lineChart(Viz1)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track2_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track3_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track4_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track5_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track6_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_count;
+                })
+				
+				])
+			
+	Viz1.xAxis().tickFormat(d3.time.format("%H:%M:%S")).ticks(10)
+	
+	
+	
+Viz3
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minussec,maxussec]))
+		.dimension(timepointsec)
+		.group(statsbytimepointsec)
+		.elasticY(true)
+		.xAxisPadding(10)
+		.xAxisLabel("Time")
+		.yAxisLabel("Average Sentiment")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz3)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track1_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_avgsentiment; 
+                }),
+				
+				dc.lineChart(Viz3)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track2_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_avgsentiment;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Average sentiment:  " + numberFormat1(d.value.track3_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_avgsentiment;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track4_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_avgsentiment
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Average Sentiment: " + numberFormat1(d.value.track5_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_avgsentiment;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Average Sentiment: " + numberFormat1(d.value.track6_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_avgsentiment;
+                })
+				
+				])
+			
+	Viz3.xAxis().tickFormat(d3.time.format("%H:%M:%S"))
+	Viz3.yAxis().tickFormat(d3.format(".2n"))
+	
+	
+					Viz5
+					.width(1800)
+					.height(300)
+                   .transitionDuration(200)
+					.margins({top: 5, right: 50, bottom: 50, left: 60})
+					.x(d3.time.scale().domain([minussec,maxussec]))
+                    .dimension(hashtagdim) 
+                    .group(hashtagstats) 
+                    .colors(d3.scale.category20b())
+                    .keyAccessor(function (p) {
+                        return p.value.timestampseclist[0]; 
+						
+                    })
+                    .valueAccessor(function(p) { return p.value.tophashtagcount; })
+                    .radiusValueAccessor(function (p) {
+                        return p.value.tophashtagcount;
+                    }) 
+                   
+                    
+                    .elasticY(true)
+					.xAxisPadding(10)
+                    .maxBubbleRelativeSize(0.01)
+                    .renderHorizontalGridLines(true)
+                    .renderVerticalGridLines(true)
+					.yAxisLabel("Tweets count")
+					.xAxisLabel("Time")
+                    .renderLabel(true)
+                    .renderTitle(true) 
+                    .title(function (p) { 
+                        return p.key
+                                + "\n" +
+								p.value.timestampseclist[0]+ "\n"+
+                               "Number of occurence of hashtags: " + numberFormat(p.value.tophashtagcount);
+                    });
+					
+					
+					Viz5.xAxis().tickFormat(d3.time.format("%H:%M:%S"))
+					Viz5.yAxis().tickFormat(d3.format(".0f"))
+	
+	
+	
+dc.renderAll();	
+
+
+  
+});
+
+}
+
+var interval = setInterval(function(){secondarymagic()}, 25000);
+})(); 
+
+
+(function() {
+
+var Viz6 =  dc.compositeChart("#Viz6");
+function secondsmagic() {
+
+d3.json("http://127.0.0.1:5001/datastream2", function (data) {
+
+  // format our data
+  //var dtgFormat = d3.time.format("%H-%M-%S");
+var secformat = d3.time.format("%Y-%m-%d %H:%M:%S");
+var minformat = d3.time.format("%Y-%m-%d %H:%M");
+var hourformat = d3.time.format("%Y-%m-%d %H");
+var numberFormat = d3.format(".0f");
+var numberFormat1 = d3.format(".2n");	
+
+  data.forEach(function(d) { 
+
+  d.time_stamp_second= secformat.parse(d["time_stamp_second"]);
+	
+	d.track1_count = parseInt(d["track1_count"]);
+	d.track2_count = parseInt(d["track2_count"]);
+	d.track3_count = parseInt(d["track3_count"]); 
+	d.track4_count = parseInt(d["track4_count"]); 
+	d.track5_count = parseInt(d["track5_count"]); 
+	d.track6_count = parseInt(d["track6_count"]); 
+		
+	
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var secondbysecond = crossfilter(data);
+
+
+  var secondsu = secondbysecond.dimension(function (d) {
+    return d.time_stamp_second;
+  });
+  
+  var minus = secondsu.bottom(1)[0].time_stamp_second;
+var maxus = secondsu.top(1)[0].time_stamp_second;
+  
+  var statsbyseconds = secondsu.group().reduce(
+                function (p, v) {
+					++p.count
+					p.track1_count = p.track1_count + parseInt(v.track1_count);
+					p.track2_count = p.track2_count + parseInt(v.track2_count);
+					p.track3_count = p.track3_count + parseInt(v.track3_count);
+					p.track4_count = p.track4_count + parseInt(v.track4_count);
+					p.track5_count = p.track5_count + parseInt(v.track5_count);
+					p.track6_count = p.track6_count + parseInt(v.track6_count);
+				
+                    return p;
+                },
+                function (p, v) {
+					--p.count
+					p.track1_count = p.track1_count - parseInt(v.track1_count);
+					p.track2_count = p.track2_count - parseInt(v.track2_count);
+					p.track3_count = p.track3_count - parseInt(v.track3_count);
+					p.track4_count = p.track4_count - parseInt(v.track4_count);
+					p.track5_count = p.track5_count - parseInt(v.track5_count);
+					p.track6_count = p.track6_count - parseInt(v.track6_count);
+					
+					
+					
+					
+                    return p; 
+                },
+                function () {
+                    return {count: 0, track1_count: 0, track2_count: 0, track3_count: 0,track4_count: 0, track5_count: 0, track6_count: 0} 
+                }
+        )
+		
+	Viz6
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minus,maxus]))
+		
+		.dimension(secondsu)
+		.group(statsbyseconds)
+	
+		  
+		
+		.elasticY(true)
+		.xAxisPadding(10)
+		
+		.xAxisLabel("Time")
+		.yAxisLabel("Tweet count")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz6)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track1_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_count;
+                }),
+				
+				dc.lineChart(Viz6)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track2_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_count;
+                }),
+				dc.lineChart(Viz6)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track3_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_count;
+                }),
+				dc.lineChart(Viz6)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track4_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_count;
+                }),
+				dc.lineChart(Viz6)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track5_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_count;
+                }),
+				dc.lineChart(Viz6)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbyseconds, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track6_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_count;
+                })
+				
+				])
+			
+	Viz6.xAxis().tickFormat(d3.time.format("%H:%M:%S")).ticks(10)
+  
+ 
+	
+	
+dc.renderAll();	
+  
+});
+
+}
+
+var interval = setInterval(function(){secondsmagic()}, 25000);
+})();   
+
+
+(function() {
+
+var Viz7 =  dc.compositeChart("#Viz7");
+function minutemagic() {
+
+d3.json("http://127.0.0.1:5001/datastream3", function (data) {
+
+  // format our data
+  //var dtgFormat = d3.time.format("%H-%M-%S");
+var secformat = d3.time.format("%Y-%m-%d %H:%M:%S");
+var minformat = d3.time.format("%Y-%m-%d %H:%M");
+var hourformat = d3.time.format("%Y-%m-%d %H");
+var numberFormat = d3.format(".0f");
+var numberFormat1 = d3.format(".2n");	
+
+  data.forEach(function(d) { 
+
+  d.time_stamp_minute= minformat.parse(d["time_stamp_minute"]);
+	
+	d.track1_count = parseInt(d["track1_count"]);
+	d.track2_count = parseInt(d["track2_count"]);
+	d.track3_count = parseInt(d["track3_count"]); 
+	d.track4_count = parseInt(d["track4_count"]); 
+	d.track5_count = parseInt(d["track5_count"]); 
+	d.track6_count = parseInt(d["track6_count"]); 
+		
+	
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var minutebyminute = crossfilter(data);
+
+
+  var minutesu = minutebyminute.dimension(function (d) {
+    return d.time_stamp_minute;
+  });
+  
+  var minusmin = minutesu.bottom(1)[0].time_stamp_minute;
+var maxusmin = minutesu.top(1)[0].time_stamp_minute;
+  
+  var statsbyminutes = minutesu.group().reduce(
+                function (p, v) {
+					++p.count
+					p.track1_count = p.track1_count + parseInt(v.track1_count);
+					p.track2_count = p.track2_count + parseInt(v.track2_count);
+					p.track3_count = p.track3_count + parseInt(v.track3_count);
+					p.track4_count = p.track4_count + parseInt(v.track4_count);
+					p.track5_count = p.track5_count + parseInt(v.track5_count);
+					p.track6_count = p.track6_count + parseInt(v.track6_count);
+				
+                    return p;
+                },
+                function (p, v) {
+					--p.count
+					p.track1_count = p.track1_count - parseInt(v.track1_count);
+					p.track2_count = p.track2_count - parseInt(v.track2_count);
+					p.track3_count = p.track3_count - parseInt(v.track3_count);
+					p.track4_count = p.track4_count - parseInt(v.track4_count);
+					p.track5_count = p.track5_count - parseInt(v.track5_count);
+					p.track6_count = p.track6_count - parseInt(v.track6_count);
+					
+					
+					
+					
+                    return p; 
+                },
+                function () {
+                    return {count: 0, track1_count: 0, track2_count: 0, track3_count: 0,track4_count: 0, track5_count: 0, track6_count: 0} 
+                }
+        )
+		
+	Viz7
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minusmin,maxusmin]))
+		
+		.dimension(minutesu)
+		.group(statsbyminutes)
+	
+		  
+		
+		.elasticY(true)
+		.xAxisPadding(10)
+		
+		.xAxisLabel("Time")
+		.yAxisLabel("Tweet count")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz7)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track1_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_count;
+                }),
+				
+				dc.lineChart(Viz7)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track2_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_count;
+                }),
+				dc.lineChart(Viz7)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track3_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_count;
+                }),
+				dc.lineChart(Viz7)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track4_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_count;
+                }),
+				dc.lineChart(Viz7)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track5_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_count;
+                }),
+				dc.lineChart(Viz7)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbyminutes, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track6_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_count;
+                })
+				
+				])
+			
+	Viz7.xAxis().tickFormat(d3.time.format("%H:%M")).ticks(10)
+  
+ 
+	
+	
+dc.renderAll();	
+  
+});
+
+}
+
+var interval = setInterval(function(){minutemagic()}, 25000);
+})();   
+
+		
+</script>	
+		
+		</body>
+		
+		
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	</html>

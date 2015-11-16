@@ -1,0 +1,138 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+	<h1>Login</h1>
+	
+	
+	
+	<form action="" method=post>
+	
+	<d1>
+	
+		<dt>Email ID: </dt>
+		
+		<dd><input type = text name=emailid value="{{
+			request.form.emailid }}"> </dd>
+			
+		 <div class="clearfix"></div>
+		
+		<dt>Twitter API Key: </dt>
+		
+		<dd><input type=password name=twitterapikey value="{{
+			request.form.twitterapikey }}"> </dd>
+		<dt>Twitter API Secret: </dt>
+		<dd><input type=password name=twitterapisecret value="{{
+			request.form.twitterapisecret }}"> </dd>
+		<dt>Twitter Oauth Token Key: </dt>
+		<dd><input type=password name=twitteroauthkey value="{{
+			request.form.twitteroauthkey  }}"> </dd>
+		<dt>Twitter Oauth Secret: </dt>
+		<dd><input type=password name=twitteroauthsecret value="{{
+			request.form.twitteroauthsecret }}"> </dd>
+			
+		 <div class="clearfix"></div>
+		
+		
+			
+		<dt>Search Terms for track1 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms1 value="{{
+			request.form.searchterms1 }}"> </dd>
+			
+		<dt>Name for track1: </dt>
+		
+		<dd><input type=text name=trackname1 value="{{
+			request.form.trackname1 }}"> </dd>
+			
+		
+		 <div class="clearfix"></div>
+		
+			
+		<dt>Search Terms for track2 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms2 value="{{
+			request.form.searchterms2 }}"> </dd>
+			
+		<dt>Name for track2: </dt>
+		
+		<dd><input type=text name=trackname2 value="{{
+			request.form.trackname2 }}"> </dd>
+			
+		
+			
+		 <div class="clearfix"></div>	
+			
+			
+			
+	
+		
+			
+		<dt>Search Terms for track3 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms3 value="{{
+			request.form.searchterms3 }}"> </dd>
+			
+		<dt>Name for track3: </dt>
+		
+		<dd><input type=text name=trackname3 value="{{
+			request.form.trackname3 }}"> </dd>
+			
+		 <div class="clearfix"></div>
+		
+		
+		
+			
+		<dt>Search Terms for track4 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms4 value="{{
+			request.form.searchterms4 }}"> </dd>
+			
+		<dt>Name for track4: </dt>
+		
+		<dd><input type=text name=trackname4 value="{{
+			request.form.trackname4 }}"> </dd>
+			
+		
+		 <div class="clearfix"></div>
+		 
+		 <dt>Search Terms for track5 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms5 value="{{
+			request.form.searchterms5 }}"> </dd>
+			
+		<dt>Name for track5: </dt>
+		
+		<dd><input type=text name=trackname5 value="{{
+			request.form.trackname5 }}"> </dd>
+			
+			
+		
+		 <div class="clearfix"></div>
+		 
+		 
+		 
+		 <dt>Search Terms for track6 (Seperate by commas): </dt>
+		
+		<dd><input type=text name=searchterms6 value="{{
+			request.form.searchterms6 }}"> </dd>
+			
+		<dt>Name for track6: </dt>
+		
+		<dd><input type=text name=trackname6 value="{{
+			request.form.trackname6 }}"> </dd>
+			
+		
+		
+	</d1>
+	
+	<p><input type=submit value=StartSearch></p>
+	
+	
+	</form>
+	
+
+	
+
+	
+{% endblock %}

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Auburn INSY Twitter Web App</title>
+		<meta charset="utf-8"/>
+		<link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel='stylesheet' />
+	</head>
+	<body class="body-style">
+		<div class="navbar-inverse navbar-default navbar-top">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Auburn INSY Twitter App</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/">Dashboard</a></li>
+					<li class="active"><a href="/TemporalAnalysis_FlowingData">Temporal Analysis on Flowing Data</a></li>
+					<li><a href="/TemporalAnalysis_PersistentData">Temporal Analysis on Persistent Data</a></li>
+					<li><a href="/SpatialAnalysis">SpatialAnalysis</a></li>
+				</ul>
+			</div>
+		</div>
+				
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-label/v0.2.1/leaflet.label.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-label/v0.2.1/leaflet.label.css' rel='stylesheet' />
+<link href="{{ url_for('static', filename='dc.css')}}" rel='stylesheet' />
+<script src="{{ url_for('static', filename='crossfilter.js')}}"></script>
+<script src="{{ url_for('static', filename='d3.min.js')}}"></script>
+<script src="{{ url_for('static', filename='dc.js')}}"></script>
+<script src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
+<script src="{{ url_for('static', filename='moment.js')}}"></script>
+<link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel='stylesheet' />
+			
+<style>
+.body-style {
+	width:90%;
+	margin:0 auto;
+}
+#StatVizHeading1 {
+	font:  15px sans-serif;
+}
+#StatVizline1{
+    height: 20px;
+    position: relative;
+}
+#StatVizline1:after {
+    border-top: 2px solid steelblue;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+}
+#Tweettablecontainer
+{
+    width: 100%;
+    height: 500px;
+    background-color: white;
+	margin-top: 10px;
+    margin-bottom: 10px;
+    font:  12px sans-serif;
+}
+Tweettable{
+   border: 1px solid black;
+}
+#Tracktablecontainer
+{
+    width: 100%;
+    height: 100px;
+	margin-top: 10px;
+    margin-bottom: 10px;
+	font:  12px sans-serif;
+}
+
+Tracktable{
+   border: 1px solid black;
+}
+#Viz1 svg{
+    width: 1800 px;
+    height: 300px;
+    font:  12px sans-serif;
+} 
+#Viz2 svg{ 
+	width: 100%;
+    height: 250px;
+	font:  12px sans-serif;
+}	  
+#Viz3 svg{ 
+	width: 1800 px;
+    height: 300px;
+	font:  12px sans-serif;
+}	 
+#Viz4 svg{ 
+	width: 100%;
+    height: 250px;
+	font:  12px sans-serif;
+}	 
+#Viz5 svg{ 
+	width: 1800 px;
+    height: 300px;
+	font:  12px sans-serif;
+}	 	 
+#Viz6 svg{ 
+	width: 1800 px;
+    height: 100px;
+	font:  12px sans-serif;
+}	 	 
+</style>
+
+<div id="StatVizHeading1">
+	<h1>Temporal Analysis of Flowing Twitter Dataset</h1>
+</div>
+
+<div id="StatVizline1">
+</div>
+<p align = "justify">
+This page of the dashboard provides the user with Visual Analytics at various levels for flowing twitter data for a time window of almost one hour.
+</p>
+<div>
+     <a href="javascript:dc.filterAll(); dc.renderAll();">Reset all the charts</a>
+</div>
+<div class="col-md-12">
+  <div class='row'>
+    <div class='span2'>
+      <table class='table table-hover' id='Tracktable'>
+        <thead>
+          <tr class='header'>
+            <th>Track 1</th>
+
+			<th>Track 2</th>
+
+			<th>Track 3</th>
+
+			<th>Track 4</th>
+
+			<th>Track 5</th>
+
+			<th>Track 6</th>
+
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+    <table class='table table-hover' id='Tweettable'>
+        <thead>
+          <tr class='header'>
+            <th>Username</th>
+
+			<th>Time</th>
+
+			<th>Tweet</th>
+
+			<th>Track</th>
+
+          </tr>
+        </thead>
+    </table>
+</div>
+<div class="col-md-6">
+	<div id="Viz2" >
+        <strong>Tracks- Tweet Counts</strong> 
+		<p align = "justify">Apart from visualizing the distribution of tweet count per track, this donut chart is meant for filtering the data by various tracks and for coordinated views.</p>
+        <a class="reset" href="javascript:Viz2.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+	<div id="Viz4" >
+        <strong>Sentiment bins</strong> 
+		<p align = "justify">Apart from visualizing the distribution of tweet count per sentiment bin, this donut chart is meant for filtering the data by sentiment and for coordinated views.</p>
+        <a class="reset" href="javascript:Viz4.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+	
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+	<div id="Viz6">
+        <strong>Slider</strong> 
+		<p align = "justify">Slider to filter out specific time intervals</p>
+        <a class="reset" href="javascript:Viz6.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+	<div id="Viz1">
+        <strong>Multi Group Tweet Counts Chart</strong> 
+		<p align = "justify">The Composite chart below explores the variation in tweet counts.(x Axis: Time y Axis: Tweet count)</p>
+        <a class="reset" href="javascript:Viz1.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+	<div id="Viz3">
+        <strong>Multi Group- Average sentiment</strong> 
+		<p align = "justify">The Composite chart below explores the variation in average sentiment.(x Axis: Time y Axis: Sentiment(-1 to 1))</p>
+        <a class="reset" href="javascript:Viz3.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+	<div id="Viz5">
+        <strong>Bubble Chart- Popular hashtags</strong> 
+		<p align = "justify">This bubble chart shows the distribution of hashtags.(x Axis: Time  y Axis: Tweet count  Size of bubble:Number of occurrence of hashtag  ) </p>
+        <a class="reset" href="javascript:Viz5.filterAll();dc.redrawAll();" style="display: none;"></a>
+    </div>
+</div>
+</div>
+
+
+<script>
+
+(function() {
+
+var TrackTable = dc.dataTable("#Tracktable");
+function tabularmagic() {
+
+d3.json("http://127.0.0.1:5001/datastream11", function (data) {
+
+  // format our data
+  //var dtgFormat = d3.time.format("%H-%M-%S");
+ 
+
+  data.forEach(function(d) { 
+
+    d.Track_name1   = d.Track_name1;
+
+    d.Track_name2   = d.Track_name2;
+
+    d.Track_name3   = d.Track_name3;
+
+    d.Track_name4   = d.Track_name4;
+
+    d.Track_name5   = d.Track_name5;
+
+    d.Track_name6   = d.Track_name6;
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var tracks = crossfilter(data);
+
+  // Create dataTable dimension
+  var trackDimension = tracks.dimension(function (d) {
+    return d.Track_name1;
+  });
+  
+  
+  
+   TrackTable.width(400).height(100)
+    .dimension(trackDimension)
+    .group(function(d) { return " "
+     })
+    .size(3)
+    .columns([
+     
+      function(d) { return  d.Track_name1; },
+
+	  function(d) { return  d.Track_name2; },
+
+	  function(d) { return  d.Track_name3; },
+
+	  function(d) { return  d.Track_name4; },
+
+	  function(d) { return  d.Track_name5; },
+
+	  function(d) { return  d.Track_name6; }
+      
+     ])
+    .sortBy(function(d){ return d.Track_name1; })
+    .order(d3.ascending);
+	
+	
+	
+dc.renderAll();	
+  
+});
+
+}
+
+var interval = setInterval(function(){tabularmagic()}, 25000);
+})();  
+
+
+(function() {
+var Viz1 = dc.compositeChart("#Viz1");
+var Viz2 = dc.pieChart("#Viz2");
+var Viz3 = dc.compositeChart("#Viz3");
+var Viz4 = dc.pieChart("#Viz4");
+var Viz5 = dc.bubbleChart("#Viz5");
+var Viz6 = dc.lineChart("#Viz6");
+var Tweettable = dc.dataTable("#Tweettable");
+function secondarymagic() {
+
+d3.json("http://127.0.0.1:5001/datastream1", function (data) {
+
+var secformat = d3.time.format("%Y-%m-%d %H:%M:%S");
+var minformat = d3.time.format("%Y-%m-%d %H:%M");
+var hourformat = d3.time.format("%Y-%m-%d %H");
+var numberFormat = d3.format(".0f");
+var numberFormat1 = d3.format(".2n");	
+
+  data.forEach(function(d) {
+	d.timestampsec= secformat.parse(d["timestamp"]);
+	d.created_at = d["created_at"];
+	d.user_name = d["user_name"];
+    d.tweet   = d["tweet"];
+	d.sentiment = parseFloat(d["sentiment"]);
+	d.sentibin = d["sentibin"];
+	d.track_name = d["track_name"];
+	d.track = d["track"];
+	d.tophashtag = d["tophashtag"];
+	d.tophashtagcount = d["tophashtagcount"];
+	d.track1_count = parseInt(d["track1_count"]);
+	d.track2_count = parseInt(d["track2_count"]);
+	d.track3_count = parseInt(d["track3_count"]); 
+	d.track4_count = parseInt(d["track4_count"]); 
+	d.track5_count = parseInt(d["track5_count"]); 
+	d.track6_count = parseInt(d["track6_count"]); 
+		
+	d.track1_sentiment = parseFloat(d["track1_sentiment"]); 
+	d.track2_sentiment = parseFloat(d["track2_sentiment"]);
+	d.track3_sentiment = parseFloat(d["track3_sentiment"]); 
+	d.track4_sentiment = parseFloat(d["track4_sentiment"]); 
+	d.track5_sentiment = parseFloat(d["track5_sentiment"]); 
+	d.track6_sentiment = parseFloat(d["track6_sentiment"]); 
+		
+	
+    
+  });
+  
+  
+
+ 
+
+
+  // Run the data through crossfilter and load our tweets
+  var tweets = crossfilter(data);
+
+  // Create dataTable dimension
+  var timepointsec = tweets.dimension(function (d) {
+            return d.timestampsec ;
+        });
+		
+	var trackdim = tweets.dimension(function (d) {
+            return d.track ;
+        });
+		
+		
+	var sentidim = tweets.dimension(function (d) {
+            return d.sentibin ;
+        });
+		
+	var hashtagdim = tweets.dimension(function (d) {
+            return d.tophashtag ;
+        });
+		
+		
+		
+var minussec = timepointsec.bottom(1)[0].timestampsec;
+var maxussec = timepointsec.top(1)[0].timestampsec;
+
+function reduceAdd(p,v) {
+			++p.count
+			return p;
+			}
+		function reduceRemove(p,v) {
+			--p.count
+			return p;
+			}
+		function reduceInitial() {
+			return {count:0};
+			}	
+
+var trackstats = trackdim.group().reduce(reduceAdd, reduceRemove, reduceInitial);
+var sentistats = sentidim.group().reduce(reduceAdd, reduceRemove, reduceInitial);
+var hashtagstats = hashtagdim.group().reduce(
+                function (p, v) {
+					++p.count
+                    
+					p.tophashtagcount = p.tophashtagcount + parseInt(v.tophashtagcount);
+                   
+					p.timestampseclist.push(v.timestampsec);
+				
+					
+                    return p;
+                }, 
+                function (p, v) {
+					--p.count
+                    p.tophashtagcount = p.tophashtagcount - parseInt(v.tophashtagcount);
+                   
+					p.timestampseclist.pop(v.timestampsec);
+                    return p; 
+                },
+                function () {
+                    return {count: 0, tophashtagcount: 0, timestampseclist:[]}
+                }
+        )
+	
+var statsbytimepointsec = timepointsec.group().reduce(
+                function (p, v) {
+					++p.count
+					p.track1_count = p.track1_count + parseInt(v.track1_count);
+					p.track2_count = p.track2_count + parseInt(v.track2_count);
+					p.track3_count = p.track3_count + parseInt(v.track3_count);
+					p.track4_count = p.track4_count + parseInt(v.track4_count);
+					p.track5_count = p.track5_count + parseInt(v.track5_count);
+					p.track6_count = p.track6_count + parseInt(v.track6_count);
+					
+					
+					
+					if (v.track != "Track1") {
+						p.track1_avgsentiment = 0;
+						p.track1_sentiment = 0;
+						} else { 
+						p.track1_sentiment = p.track1_sentiment + parseFloat(v.track1_sentiment);
+						p.track1_avgsentiment = parseFloat(p.track1_sentiment/p.track1_count);
+						}
+					
+					if (v.track != "Track2") {
+						p.track2_avgsentiment = 0;
+						p.track2_sentiment = 0;
+						} else {
+						p.track2_sentiment = p.track2_sentiment + parseFloat(v.track2_sentiment);
+						p.track2_avgsentiment = parseFloat(p.track2_sentiment/p.track2_count);
+						}
+					
+					if (v.track != "Track3") {
+						p.track3_avgsentiment = 0;
+						p.track3_sentiment = 0;
+						} else {
+						p.track3_sentiment = p.track3_sentiment + parseFloat(v.track3_sentiment);
+						p.track3_avgsentiment = parseFloat(p.track3_sentiment/p.track3_count);
+						}
+					
+					
+					if (v.track != "Track4") {
+						p.track4_avgsentiment = 0;
+						p.track4_sentiment = 0;
+						} else {
+						p.track4_sentiment = p.track4_sentiment + parseFloat(v.track4_sentiment);
+						p.track4_avgsentiment = parseFloat(p.track4_sentiment/p.track4_count);
+						}
+					
+					if (v.track != "Track5") {
+						p.track5_avgsentiment = 0;
+						p.track5_sentiment = 0;
+						} else {
+						p.track5_sentiment = p.track5_sentiment + parseFloat(v.track5_sentiment);
+						p.track5_avgsentiment = parseFloat(p.track5_sentiment/p.track5_count);
+						}
+					
+					if (v.track != "Track6") {
+						p.track6_avgsentiment = 0;
+						p.track6_sentiment = 0;
+						} else {
+						p.track6_sentiment = p.track6_sentiment + parseFloat(v.track6_sentiment);
+						p.track6_avgsentiment = parseFloat(p.track6_sentiment/p.track6_count);
+						}
+				
+                    return p;
+                },
+                function (p, v) {
+					--p.count
+					p.track1_count = p.track1_count - parseInt(v.track1_count);
+					p.track2_count = p.track2_count - parseInt(v.track2_count);
+					p.track3_count = p.track3_count - parseInt(v.track3_count);
+					p.track4_count = p.track4_count - parseInt(v.track4_count);
+					p.track5_count = p.track5_count - parseInt(v.track5_count);
+					p.track6_count = p.track6_count - parseInt(v.track6_count);
+					
+					
+					if (v.track != "Track1") {
+						p.track1_avgsentiment = 0;
+						p.track1_sentiment = 0;
+						} else { 
+						p.track1_sentiment = p.track1_sentiment - parseFloat(v.track1_sentiment);
+						p.track1_avgsentiment = parseFloat(p.track1_sentiment/p.track1_count);
+						}
+					
+					if (v.track != "Track2") {
+						p.track2_avgsentiment = 0;
+						p.track2_sentiment = 0;
+						} else {
+						p.track2_sentiment = p.track2_sentiment - parseFloat(v.track2_sentiment);
+						p.track2_avgsentiment = parseFloat(p.track2_sentiment/p.track2_count);
+						}
+					
+					if (v.track != "Track3") {
+						p.track3_avgsentiment = 0;
+						p.track3_sentiment = 0;
+						} else {
+						p.track3_sentiment = p.track3_sentiment - parseFloat(v.track3_sentiment);
+						p.track3_avgsentiment = parseFloat(p.track3_sentiment/p.track3_count);
+						}
+					
+					
+					if (v.track != "Track4") {
+						p.track4_avgsentiment = 0;
+						p.track4_sentiment = 0;
+						} else {
+						p.track4_sentiment = p.track4_sentiment - parseFloat(v.track4_sentiment);
+						p.track4_avgsentiment = parseFloat(p.track4_sentiment/p.track4_count);
+						}
+					
+					if (v.track != "Track5") {
+						p.track5_avgsentiment = 0;
+						p.track5_sentiment = 0;
+						} else {
+						p.track5_sentiment = p.track5_sentiment - parseFloat(v.track5_sentiment);
+						p.track5_avgsentiment = parseFloat(p.track5_sentiment/p.track5_count);
+						}
+					
+					if (v.track != "Track6") {
+						p.track6_avgsentiment = 0;
+						p.track6_sentiment = 0;
+						} else {
+						p.track6_sentiment = p.track6_sentiment - parseFloat(v.track6_sentiment);
+						p.track6_avgsentiment = parseFloat(p.track6_sentiment/p.track6_count);
+						}
+				
+					
+					
+                    return p; 
+                },
+                function () {
+                    return {count: 0, track1_count: 0, track2_count: 0, track3_count: 0,track4_count: 0, track5_count: 0, track6_count: 0, track1_sentiment: 0.0000, track2_sentiment:0.0000, track3_sentiment: 0.0000, track4_sentiment: 0.0000 , track5_sentiment: 0.0000, track6_sentiment: 0.0000, track1_avgsentiment:0.0000, track2_avgsentiment:0.0000, track3_avgsentiment: 0.0000, track4_avgsentiment: 0.0000, track5_avgsentiment: 0.0000,track6_avgsentiment: 0.0000 } 
+                }
+        )
+var colorScaletrack = d3.scale.ordinal().domain(["Track1", "Track2","Track3","Track4","Track5","Track6"])
+                                   .range(["#1b9e77", "#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02"]);		
+
+var colorScalesenti = d3.scale.ordinal().domain(["very positive", "positive","neutral","negative","very negative"])
+                                   .range(["#1a9641", "#a6d96a","#0571b0","#fdae61","#d7191c"]);			
+		
+ Tweettable.width(800).height(500)
+    .dimension(timepointsec)
+    .group(function(d) { return "Latest 10 tweets shown (Will filter along with other charts)"
+     })
+    .size(10)
+    .columns([
+     
+      function(d) { return  d.user_name; },
+	  function(d) { return  d.timestampsec; },
+	  function(d) { return  d.tweet ; },
+
+	  function(d) { return  d.track_name; }
+
+      
+     ])
+    .sortBy(function(d){ return d.timestampsec; })
+    .order(d3.descending);		
+Viz2
+    .width(200)
+    .height(200)
+    .innerRadius(50)
+    .dimension(trackdim)
+	.colors(function(d){ return colorScaletrack(d); })
+    .group(trackstats)
+	 .valueAccessor(function(p) { return p.value.count; })
+    .legend(dc.legend().x(350).y(100).gap(5));
+	
+	
+Viz4
+    .width(200)
+    .height(200)
+    .innerRadius(50)
+    .dimension(sentidim)
+	.colors(function(d){ return colorScalesenti(d); })
+    .group(sentistats)
+	 .valueAccessor(function(p) { return p.value.count; })
+    .legend(dc.legend().x(350).y(100).gap(5));
+	
+	
+ Viz6.width(1800)
+    .height(100)
+    .margins({top: 5, right: 50, bottom: 50, left: 60})
+	.brushOn(true)
+    .dimension(timepointsec)
+    .group(statsbytimepointsec)
+    .transitionDuration(200)
+    .elasticY(true)
+    .x(d3.time.scale().domain([minussec,maxussec]));
+ 
+	
+	Viz6.xAxis().tickFormat(d3.time.format("%H:%M:%S")).ticks(10)
+		
+Viz1
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minussec,maxussec]))
+		
+		.dimension(timepointsec)
+		.group(statsbytimepointsec)
+	
+		  
+		
+		.elasticY(true)
+		.xAxisPadding(10)
+		
+		.xAxisLabel("Time")
+		.yAxisLabel("Tweet count")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz1)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track1_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_count;
+                }),
+				
+				dc.lineChart(Viz1)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track2_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track3_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track4_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track5_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_count;
+                }),
+				dc.lineChart(Viz1)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Tweet count: " + numberFormat(d.value.track6_count);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_count;
+                })
+				
+				])
+			
+	Viz1.xAxis().tickFormat(d3.time.format("%H:%M:%S")).ticks(10)
+	
+	
+	
+Viz3
+		.width(1800)
+        .height(300)
+		.transitionDuration(200)
+		.margins({top: 5, right: 50, bottom: 50, left: 60})
+		.brushOn(false)
+		.clipPadding(10)
+		.x(d3.time.scale().domain([minussec,maxussec]))
+		.dimension(timepointsec)
+		.group(statsbytimepointsec)
+		.elasticY(true)
+		.xAxisPadding(10)
+		.xAxisLabel("Time")
+		.yAxisLabel("Average Sentiment")
+		.legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+		.renderHorizontalGridLines(true)
+		.shareTitle(false)
+		
+        .compose([
+            dc.lineChart(Viz3)
+                
+                .colors('#1b9e77')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 1")
+					.renderTitle(true).title(function (d) {
+                	return "Track 1" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track1_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track1_count > 0 ? d.value.track1_avgsentiment : 0; 
+                }),
+				
+				dc.lineChart(Viz3)
+                
+                .colors('#d95f02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 2")
+					.renderTitle(true).title(function (d) {
+                	return "Track 2" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track2_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track2_count > 0 ? d.value.track2_avgsentiment : 0; 
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#7570b3')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 3")
+					.renderTitle(true).title(function (d) {
+                	return "Track 3" + "\n" + d.key + "\n"+ "Average sentiment:  " + numberFormat1(d.value.track3_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track3_count > 0 ? d.value.track3_avgsentiment : 0;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#e7298a')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 4")
+					.renderTitle(true).title(function (d) {
+                	return "Track 4" + "\n" + d.key + "\n"+ "Average sentiment: " + numberFormat1(d.value.track4_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track4_count > 0 ? d.value.track4_avgsentiment : 0;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#66a61e')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 5")
+					.renderTitle(true).title(function (d) {
+                	return "Track 5" + "\n" + d.key + "\n"+ "Average Sentiment: " + numberFormat1(d.value.track5_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track5_count > 0 ? d.value.track5_avgsentiment : 0;
+                }),
+				dc.lineChart(Viz3)
+                
+                .colors('#e6ab02')
+				.renderDataPoints(true)
+				
+                .group(statsbytimepointsec, "Track 6")
+					.renderTitle(true).title(function (d) {
+                	return "Track 6" + "\n" + d.key + "\n"+ "Average Sentiment: " + numberFormat1(d.value.track6_avgsentiment);
+                }).valueAccessor(function (d) {
+                	return d.value.track6_count > 0 ? d.value.track6_avgsentiment : 0;
+                })
+				
+				])
+			
+	Viz3.xAxis().tickFormat(d3.time.format("%H:%M:%S"))
+	Viz3.yAxis().tickFormat(d3.format(".2n"))
+	
+	
+					Viz5
+					.width(1800)
+					.height(300)
+                   .transitionDuration(200)
+					.margins({top: 5, right: 50, bottom: 50, left: 60})
+					.x(d3.time.scale().domain([minussec,maxussec]))
+                    .dimension(hashtagdim) 
+                    .group(hashtagstats) 
+                    .colors(d3.scale.category20b())
+                    .keyAccessor(function (p) {
+                        return p.value.timestampseclist[0]; 
+						
+                    })
+                    .valueAccessor(function(p) { return p.value.tophashtagcount; })
+                    .radiusValueAccessor(function (p) {
+                        return p.value.tophashtagcount;
+                    }) 
+                   
+                    
+                    .elasticY(true)
+					.xAxisPadding(10)
+                    .maxBubbleRelativeSize(0.01)
+                    .renderHorizontalGridLines(true)
+                    .renderVerticalGridLines(true)
+					.yAxisLabel("Tweets count")
+					.xAxisLabel("Time")
+                    .renderLabel(true)
+                    .renderTitle(true) 
+                    .title(function (p) { 
+                        return p.key
+                                + "\n" +
+								p.value.timestampseclist[0]+ "\n"+
+                               "Number of occurence of hashtags: " + numberFormat(p.value.tophashtagcount);
+                    });
+					
+					
+					Viz5.xAxis().tickFormat(d3.time.format("%H:%M:%S"))
+					Viz5.yAxis().tickFormat(d3.format(".0f"))
+	
+	
+	
+dc.renderAll();	
+
+
+  
+});
+
+}
+
+var interval = setInterval(function(){secondarymagic()}, 25000);
+})(); 
+
+
+
+		
+</script>	
+</body>
+</html>
